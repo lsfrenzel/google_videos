@@ -159,39 +159,45 @@
       </div>
     </section>
 
-    <section class="comment-section">
-      <h2>Deixe seu Comentário</h2>
-      <form id="commentForm">
-        <input type="text" id="name" placeholder="Seu nome" required>
-        <textarea id="comment" placeholder="Seu comentário" required></textarea>
-        <button type="submit">Enviar Comentário</button>
-      </form>
-      <div id="comments"></div>
-    </section>
+    <h2>Deixe seu Comentário</h2>
+    <form id="commentForm">
+      <input type="text" id="name" placeholder="Seu nome" required>
+      <textarea id="comment" placeholder="Seu comentário" required></textarea>
+      <button type="submit">Enviar Comentário</button>
+    </form>
+    <div id="message" class="message"></div>
   </main>
 
   <footer>
     <p>&copy; 2025 - lsfrenzel</p>
   </footer>
 
+  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
   <script>
-    // Código JS para lidar com comentários
+    // Inicialize o EmailJS com seu User ID
+    emailjs.init("KVYH3Iox_uJRy6pQE");
+
     document.getElementById('commentForm').addEventListener('submit', function(event) {
       event.preventDefault();
-      
-      const name = document.getElementById('name').value.trim();
-      const comment = document.getElementById('comment').value.trim();
 
-      if (name && comment) {
-        const commentDiv = document.createElement('div');
-        commentDiv.classList.add('comment');
-        commentDiv.innerHTML = `<strong>${name}:</strong><p>${comment}</p>`;
+      // Obtém os dados do formulário
+      const name = document.getElementById('name').value;
+      const comment = document.getElementById('comment').value;
 
-        document.getElementById('comments').appendChild(commentDiv);
-
-        // Limpar campos após envio
-        document.getElementById('commentForm').reset();
-      }
+      // Envia os dados para o seu e-mail usando o serviço do EmailJS
+      emailjs.send('service_g1zdi0j', 'template_qvgl0xf', {
+        from_name: name,
+        message: comment
+      }).then(function(response) {
+        document.getElementById('message').textContent = "Comentário enviado com sucesso!";
+        document.getElementById('message').style.color = "#4caf50";
+        // Limpar os campos após o envio
+        document.getElementById('name').value = '';
+        document.getElementById('comment').value = '';
+      }, function(error) {
+        document.getElementById('message').textContent = "Erro ao enviar comentário. Tente novamente.";
+        document.getElementById('message').style.color = "#f44336";
+      });
     });
   </script>
 </body>
